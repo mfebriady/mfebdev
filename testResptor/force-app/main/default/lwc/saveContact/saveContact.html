@@ -1,0 +1,171 @@
+<template>
+    <lightning-card>
+        
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Account Information</span>
+            </h3>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >          
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input onchange={inputphone} label="Phone"></lightning-input>
+            </div>            
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input onchange={inputFName} label="First Name"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input onchange={inputHphone} label="Home Phone"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input onchange={inputLName} label="Last Name"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={AccName} label="Account Name"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={MPhone} label="Mobile"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Title} label="Title"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={OPhone} label="Other Phone"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Depart} label="Department"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Fx} label="Fax"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input type="date" value={Birthdate} label="Birthdate"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Email} label="Email"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Reporto} label="Reports to"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Assist} label="Assistant"></lightning-input>
+            </div>
+        </div>
+        
+        <!--<div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+               <lightning-select name="Lsource" label="Lead Source">
+                    <option value="">--None--</option>
+                    <option value="1">Web</option>
+                    <option value="2">Phone Inquiry</option>
+                    <option value="3">Partner Referral</option>
+                    <option value="3">Purchased List</option>
+                    <option value="3">Other</option>
+                </lightning-select>  
+            </div>-->
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={AssPhone} label="Asst. Phone"></lightning-input>
+            </div>
+        
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Address Information</span>
+            </h3>
+        </div>
+        
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-align_absolute-center" style="max-width: 400px;">
+                <lightning-input-address
+                    address-label="Mailing Address"
+                    street-label="Mailing Street"
+                    city-label="Mailing City"
+                    country-label="Mailing Country"
+                    province-label="Mailing Province"
+                    postal-code-label="Mailing PostalCode"
+                    street="121 Spear St."
+                    city="San Francisco"
+                    country="US"
+                    province="CA"
+                    postal-code="94105"
+                    field-level-help="Help Text for inputAddress field" >
+                </lightning-input-address>
+            </div>
+            
+            <div class="slds-col slds-align_absolute-center" style="max-width: 400px;">
+                <lightning-input-address
+                    address-label="Other Address"
+                    street-label="Other Street"
+                    city-label="Other City"
+                    country-label="Other Country"
+                    province-label="Other Province"
+                    postal-code-label="Other PostalCode"
+                    street="121 Spear St."
+                    city="San Francisco"
+                    country="US"
+                    province="CA"
+                    postal-code="94105"
+                    field-level-help="Help Text for inputAddress field" >
+                </lightning-input-address>
+            </div>
+            
+        </div>
+        
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Additional Information</span>
+            </h3>
+        </div>
+        
+        <div class="slds-grid slds-gutters" >
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Lang} label="Languages"></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input value={Lvl} label="Level"></lightning-input>
+            </div>
+        </div>
+        
+        <div class="slds-section slds-is-open">
+            <h3 class="slds-section__title slds-theme_shade">
+                <span class="slds-truncate slds-p-horizontal_small" title="Section Title">Description Information</span>
+            </h3>
+        </div>
+        
+        <div style="width: 82.5%;">
+            <lightning-textarea value={Desc} name="Desc" label="Description"></lightning-textarea>
+        </div>
+        
+        <div class="mvButton">
+            <lightning-button variant="brand" label="Save Account" title="Base action" onclick={SaveData}></lightning-button>     
+        </div>
+    </lightning-card>   
+</template>

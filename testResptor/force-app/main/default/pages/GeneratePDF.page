@@ -1,0 +1,6 @@
+<apex:page showHeader="false" standardController="Account" standardStylesheets="false" renderAs="PDF">
+    
+    Test Document
+    <img src="http://chart.googleapis.com/chart?cht=bvg&chs=250x150&chd=s:Monkeys&chxt=x,y&chxs=0,ff0000,12,0,lt|1,0000ff,10,1,lt" />
+                      
+</apex:page>

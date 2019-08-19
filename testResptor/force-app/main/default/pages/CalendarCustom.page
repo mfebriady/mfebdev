@@ -1,0 +1,544 @@
+<apex:page showHeader="false" sidebar="false" >
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="{!$Resource.CalendarJs}"/>
+    <link rel="stylesheet" type="text/css" href="{!$Resource.CalendarCss}"/>
+
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet"/>
+
+<script>
+
+    $(document).ready(function() {
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        
+        /*  className colors
+        
+        className: default(transparent), important(red), chill(pink), success(green), info(blue)
+        
+        */      
+        
+          
+        /* initialize the external events
+        -----------------------------------------------------------------*/
+    
+        $('#external-events div.external-event').each(function() {
+        
+            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+            // it doesn't need to have a start or end
+            var eventObject = {
+                title: $.trim($(this).text()) // use the element's text as the event title
+            };
+            
+            // store the Event Object in the DOM element so we can get to it later
+            $(this).data('eventObject', eventObject);
+            
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+            
+        });
+    
+    
+        /* initialize the calendar
+        -----------------------------------------------------------------*/
+        
+        var calendar =  $('#calendar').fullCalendar({
+            header: {
+                left: 'title',
+                center: 'agendaDay,agendaWeek,month',
+                right: 'prev,next today'
+            },
+            editable: true,
+            firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
+            selectable: true,
+            defaultView: 'month',
+            
+            axisFormat: 'h:mm',
+            columnFormat: {
+                month: 'ddd',    // Mon
+                week: 'ddd d', // Mon 7
+                day: 'dddd M/d',  // Monday 9/7
+                agendaDay: 'dddd d'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy', // September 2009
+                week: "MMMM yyyy", // September 2009
+                day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+            },
+            allDaySlot: false,
+            selectHelper: true,
+            select: function(start, end, allDay) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    calendar.fullCalendar('renderEvent',
+                        {
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay
+                        },
+                        true // make the event "stick"
+                    );
+                }
+                calendar.fullCalendar('unselect');
+            },
+            droppable: true, // this allows things to be dropped onto the calendar !!!
+            drop: function(date, allDay) { // this function is called when something is dropped
+            
+                // retrieve the dropped element's stored Event Object
+                var originalEventObject = $(this).data('eventObject');
+                
+                // we need to copy it, so that multiple events don't have a reference to the same object
+                var copiedEventObject = $.extend({}, originalEventObject);
+                
+                // assign it the date that was reported
+                copiedEventObject.start = date;
+                copiedEventObject.allDay = allDay;
+                
+                // render the event on the calendar
+                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
+                }
+                
+            },
+            
+            events: [
+                {
+                    title: 'All Day Event',
+                    start: new Date(y, m, 1)
+                },
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d-3, 16, 0),
+                    allDay: false,
+                    className: 'info'
+                },
+                {
+                    id: 999,
+                    title: 'Repeating Event',
+                    start: new Date(y, m, d+4, 16, 0),
+                    allDay: false,
+                    className: 'info'
+                },
+                {
+                    title: 'Meeting',
+                    start: new Date(y, m, d, 10, 30),
+                    allDay: false,
+                    className: 'important'
+                },
+                {
+                    title: 'Lunch',
+                    start: new Date(y, m, d, 12, 0),
+                    end: new Date(y, m, d, 14, 0),
+                    allDay: false,
+                    className: 'important'
+                },
+                {
+                    title: 'Meeting Sore',
+                    start: new Date(y, m, d, 15, 30),
+                    end: new Date(y, m, d, 16, 0),
+                    allDay: false,
+                    className: 'important'
+                },
+                {
+                    title: 'Birthday Party',
+                    start: new Date(y, m, d+1, 19, 0),
+                    end: new Date(y, m, d+1, 22, 30),
+                    allDay: false,
+                },
+                {
+                    title: 'Click for Google',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    url: 'https://ccp.cloudaccess.net/aff.php?aff=5188',
+                    className: 'success'
+                }
+            ],          
+        });
+        
+        
+    });
+
+</script>
+<style>
+
+    body {
+        margin-bottom: 40px;
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        font-family: 'Roboto', sans-serif;
+    /*background:url(http://www.digiphotohub.com/wp-content/uploads/2015/09/bigstock-Abstract-Blurred-Background-Of-92820527.jpg);*/
+    	background-color: #ddd;
+        }
+        
+    #wrap {
+    /*width: 1100px;*/
+    	width: 90%;
+        margin: 0 auto;
+        }
+        
+    #external-events {
+        float: left;
+        width: 150px;
+        padding: 0 10px;
+        text-align: left;
+        }
+        
+    #external-events h4 {
+        font-size: 16px;
+        margin-top: 0;
+        padding-top: 1em;
+        }
+        
+    .external-event { /* try to mimick the look of a real event */
+        margin: 10px 0;
+        padding: 2px 4px;
+        background: #3366CC;
+        color: #fff;
+        font-size: .85em;
+        cursor: pointer;
+        }
+        
+    #external-events p {
+        margin: 1.5em 0;
+        font-size: 11px;
+        color: #666;
+        }
+        
+    #external-events p input {
+        margin: 0;
+        vertical-align: middle;
+        }
+
+    #calendar {
+    /*      float: right; */
+    margin: 0 auto;
+    width: 90%;
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px #C3C3C3;
+    -webkit-box-shadow: 0px 0px 21px 2px rgba(0,0,0,0.18);
+    -moz-box-shadow: 0px 0px 21px 2px rgba(0,0,0,0.18);
+    box-shadow: 0px 0px 21px 2px rgba(0,0,0,0.18);
+        }
+    .fc-first th
+    {
+    background: #026a98 !important;
+    }
+    .fc-state-down, .fc-state-active {
+    
+    background-color: #026a98 !important;
+    color: #FFF !important;
+    
+    }
+    span.fc-button {
+
+    font-family: 'Roboto', sans-serif;
+    border-color: #026a98;
+    color: #026a98;
+
+	}
+    .table.fc-header
+    {
+    width:100%;
+    }
+    .fc-event-inner {
+
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    line-height: 15px;
+	}
+    .fc-state-disabled
+    {
+    background-color: #c5ddef;
+    }
+    
+    <!-- Table Style-->
+
+    .content
+    {
+    margin-top: 20px;
+    background-color: #fff;
+	padding: 11px;
+	border-radius: 10px;
+    width: 90%;
+    }
+    .display
+    {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    margin-top: 15px;
+    box-shadow: 0px 7px 11px -5px #ddd;
+    }
+    .tableHead
+    {
+    background-color: #026a98;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0px -1px 0px 2px #fff;
+    }
+    .tableBody
+    {
+    height: 100%;
+    border:1px solid #ddd;
+    background-color: #fff;
+    }
+    .tableRow
+    {
+    width: 100%;
+    overflow: auto;
+    margin: -8px;
+    }
+    .fa-calendar
+    {
+    font-size: 24px;
+    padding-right: 7px;
+    }
+    .tableTitle
+    {
+    width:25%;
+    height: 100%;
+    border: 2px solid #ddd;
+    background-color: #3A87AD;
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+    }
+    .tableValue
+    {
+    width:75%;
+    height: 100%;
+    border:1px solid #ddd;
+    
+    padding: 5px;
+    }
+    .tableRow:nth-child(even) {background-color: #fff;}
+	.tableRow:nth-child(odd) {background-color: #a3b4cb;}
+    <!--responsive-->
+    @media (max-width: 788px)
+    {
+    	/*.fc-header td
+        {
+        white-space: normal;
+        }
+    	.fc-button-today
+        {
+        margin-top: -20px;
+    	}
+    	.fc-header-center
+    	{
+    	display: flex;
+    	}*/
+    	.fc-header-right 
+    	{
+        width: 100%;
+		text-align: center;
+        }
+        
+    }
+   @media (max-width: 656px)
+    {
+    	.fc-header-center
+    	{
+    	display: block;
+    	}
+    	.fc-button
+    	{
+    	border-radius: 3px !important;
+    	}
+    	.fc-header-right 
+    	{
+		text-align: center;
+        }
+    }
+   @media (max-width: 628px)
+    {
+    	.fc-header-right
+    	{
+    	display:block;
+    	}
+    }
+   @media (max-width: 494px)
+    {
+        .fc-header-title h2
+        {
+    		font-size: 21px;
+    		white-space: normal;
+        }
+    }
+    @media (max-width: 462px)
+    {	
+    /*.fc-header td
+    	{
+    	display: block;
+    }*/	
+    	.fc-header-left
+    	{
+    	text-align:center;
+    	}
+    	body
+    	{
+    	margin-top: 0px;
+    	}
+    	#wrap
+    	{
+    	width: 100%;
+    	}
+    	#calendar
+    	{
+    	width: 100%;
+    	}
+    	.fc-header tr
+    	{
+    	display: block;
+    	}
+    
+        .fc-header-right {
+        
+        width: width: 100%;
+        text-align: center;
+    /*display: contents !important;*/
+        }
+        .fc-button-today 
+    	{
+        margin-top: 0px;
+    	margin-left: -11px;
+        }
+        .fc-header .fc-button 
+        {
+        margin-bottom: 2px !important;
+        vertical-align: top;
+        }
+    	.fc-button-month.fc-state-default, .fc-button-agendaWeek.fc-state-default, .fc-button-agendaDay.fc-state-default
+    	{
+    	width: 52px;
+    	margin: 1px 1px 1px 0px;
+    	font-size: 11px;
+    	}
+    	.fc-border-separate tr.fc-last th
+    	{
+    	font-size:11px;
+    	}
+    	.content
+    	{
+    	margin-top: 5px;
+    	width: 100%;
+    	}
+    }
+    @media (max-width: 337px)
+    {
+    	.fc-button
+    	{
+    	font-size: 13px;
+    	width: 50px;
+    	}
+    }
+    @media (max-width: 338px)
+    {
+    	.fc-header td
+    	{
+    	padding: 10px 5px 0px;
+    	}
+        .fc-header .fc-button {
+        
+        margin-right: -1px;
+        height: 18px;
+        font-size: 9px;
+        width: 50px;
+        
+        }
+        .fc-text-arrow 
+    	{
+        line-height: 16px;
+        }
+    }
+    
+
+    
+    
+</style>
+</head>
+
+<body>
+<div id='wrap'>
+<div><td class="fc-header-left"></td></div>
+<div id='calendar'></div>
+
+<div style='clear:both'></div>
+</div>
+    
+
+
+    <!-- table -->
+
+<div class='container content'>
+    <div><i class='fa fa-calendar'></i><h3>Schedule List</h3></div>
+    <div class='row tableRow'>
+      <div class="col-md-12">
+        <table id="example" class="display" style="width:100%">
+          <tbody class="tableBody">
+                <tr class='tableRow'>
+                  <td class="tableTitle">Kondangan Mantan</td>
+                  <td class="tableValue">
+                     <div class='val'>Pernikahan di jalan kemang</div>
+                     <div class='val'>25 Desember 2019 13:10 - 13:45</div>
+                  </td>
+                </tr>
+              	<tr class='tableRow'>
+                  <td class="tableTitle">Rapat manajemen</td>
+                  <td class="tableValue">
+                     <div class='val'>Rapat bersama manajement cloud</div>
+                     <div class='val'>25 Desember 2019 14:00 - 14:30</div>  
+                  </td>
+                </tr>
+              	<tr class='tableRow'>
+                   <td class="tableTitle">Training SAP</td>
+                  <td class="tableValue">
+                  	 <div>Training SAP di PT.Prima Gama</div>
+                     <div>25 Desember 2019 16:00 - 18:00</div>  
+                  </td>
+                </tr>
+              	<tr class='tableRow'>
+                   <td class="tableTitle">Makan malam</td>
+                  <td class="tableValue">
+                  	 <div>Makan malam bersama ibu presiden</div>
+                     <div>25 Desember 2019 19:00 - 20:30</div>  
+                  </td>
+                </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+    
+</body>
+</html>
+
+</apex:page>

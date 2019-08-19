@@ -1,0 +1,5 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome">
+    <aura:attribute name="Baseurl" type="String" />
+    
+    <a href="" data-id="test"  onclick = "{!c.downloadfile}" >Download</a>
+</aura:component>

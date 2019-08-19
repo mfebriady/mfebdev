@@ -1,0 +1,15 @@
+<apex:page showHeader="false" standardController="Account" >
+    
+    <a href="/apex/GeneratePDF" id="lnkPreview" target="_blank">PDF</a>
+    file is being downloaded. If it doesn't download, <a href="/apex/PDFTestPage" id="lnkDownload" target="_blank" download="PDFTest.pdf" onload="auto_download();">click here</a> to download file.
+    
+    <script>
+        function auto_download(){
+            document.getElementById('lnkDownload').click();
+            document.getElementById('lnkPreview').click();
+      };
+      
+      //trigger auto-download
+        window.setTimeout(auto_download, 10);
+    </script>
+</apex:page>
